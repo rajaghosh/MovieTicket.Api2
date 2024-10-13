@@ -12,8 +12,8 @@ using MovieTicket.DBHelper.DatabaseContext;
 namespace MovieTicket.DBHelper.Migrations
 {
     [DbContext(typeof(MovieTicketDbContext))]
-    [Migration("20241013204230_migration_2")]
-    partial class migration_2
+    [Migration("20241013210848_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

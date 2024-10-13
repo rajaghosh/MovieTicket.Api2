@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MovieTicket.BusinessService.LoggerFactory;
 using MovieTicket.BusinessService.Services.Interface;
 using MovieTicket.ModelHelper.DTO;
 using MovieTicketApi.Helper;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using Document = iTextSharp.text.Document;
 
 namespace MovieTicket.Api.Controllers
 {
@@ -22,6 +26,54 @@ namespace MovieTicket.Api.Controllers
             _movieService = movieService;
             _logger = logger;
         }
+
+        [AllowAnonymous]
+        [HttpGet("DownloadPDF")]
+        public IActionResult DownloadPDF()
+        {
+            //using (var stream = new MemoryStream())
+            //{
+            //    using (var pdfDoc = new Document())
+            //    {
+            //        PdfWriter.GetInstance(pdfDoc, stream);
+            //        pdfDoc.Open();
+
+            //        // Add content to the PDF (e.g., using iTextSharp methods)
+            //        var paragraph = new Paragraph("Hello, World!");
+            //        pdfDoc.Add(paragraph);
+
+            //        pdfDoc.Close();
+            //    }
+
+            //    stream.Position = 0;
+            //    return File(stream, "application/pdf", "mypdf.pdf");
+            //}
+
+            // Create a new PDF document
+            var document = new Document();
+
+            // Create a memory stream to store the PDF
+            var memoryStream = new MemoryStream();
+
+            // Create a PDF writer
+            var pdfWriter = PdfWriter.GetInstance(document, memoryStream);
+
+            // Open the document
+            document.Open();
+
+            // Add text to the PDF
+            var paragraph = new Paragraph("Hello, World!");
+            document.Add(paragraph);
+            paragraph = new Paragraph("Hello, World!");
+            document.Add(paragraph);
+
+
+            // Close the document
+            document.Close();
+            // Set response headers
+            return File(memoryStream.ToArray(), "application/pdf", "mypdf.pdf");
+        }
+
 
         [HttpGet("GetAllMovie")]
         public async Task<ResponseDto<List<MovieDto>>> GetAll()

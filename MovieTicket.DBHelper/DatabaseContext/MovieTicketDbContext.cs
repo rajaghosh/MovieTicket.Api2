@@ -1,36 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using MovieTicket.DBHelper.DatabaseContext.ConfigHelper;
 using MovieTicket.DBHelper.Entities;
-
-using Microsoft.EntityFrameworkCore.Design;
-
-using System.IO;
 using System.Text.Json;
-using System;
-using MovieTicket.ModelHelper.Models;
 
 namespace MovieTicket.DBHelper.DatabaseContext
 {
     public class MovieTicketDbContext : DbContext
     {
-        //private readonly IDbAppSettings _dbAppSettings;
-        //private readonly string _connStr;
-        //public MovieTicketDbContext(IDbAppSettings dbAppSettings)
-        //{
-        //    _dbAppSettings = dbAppSettings;
-        //    _connStr = _dbAppSettings._connStr;
-        //}
-
-
-        //public IConfiguration Configuration { get; }
-        //private readonly string _connStr;
-        //public MovieTicketDbContext(IConfiguration configuration)
-        //{
-        //    Configuration = configuration;
-        //    _connStr = Configuration.GetConnectionString("ConnectionStrings:MovieTicketDb");
-        //}
-
         public DbSet<MovieMaster> MovieMasters { get; set; }
         public DbSet<TheatreMaster> TheatreMasters { get; set; }
         public DbSet<UserMaster> UserMasters { get; set; }
@@ -41,23 +16,14 @@ namespace MovieTicket.DBHelper.DatabaseContext
         public MovieTicketDbContext() { }
         public MovieTicketDbContext(DbContextOptions<MovieTicketDbContext> options) : base(options) { }
 
+
         //This is optional. FOR MIGRATION FILE CREATION ONLY. We have used it as we are unable to create the migration file directly 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //optionsBuilder.UseSqlServer("Data Source=RAJA-LENOVO\\SQLEXPRESS;Initial Catalog=MovieTicket_5; Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False"); // Replace with your connection string and provider
+            string appSettingFilePath = "..\\MovieTicket.Api\\appsettings.json";
+            string jsonString = File.ReadAllText(appSettingFilePath);
 
-            //"ConnectionStrings": {
-            //    "MovieTicketDb":
-
-            //optionsBuilder.UseSqlServer(_connStr);
-
-            //string jsonFilePath = "../Settings.json";
-            string jsonFilePath = "..\\MovieTicket.Api\\appsettings.json";
-            //string jsonString = File.ReadAllText(jsonFilePath);
-            //DBConnModel conn = JsonSerializer.Deserialize<DBConnModel>(jsonString);
-
-            string jsonString = File.ReadAllText(jsonFilePath);
-
+            //Manual read from the appsettings.json for Migration Run to DB
             string conn = "";
             using (JsonDocument doc = JsonDocument.Parse(jsonString))
             {
@@ -65,19 +31,10 @@ namespace MovieTicket.DBHelper.DatabaseContext
                 JsonElement appSettings = root.GetProperty("ConnectionStrings");
 
                 conn = appSettings.GetProperty("MovieTicketDb").GetString();
-
             }
 
             optionsBuilder.UseSqlServer(conn);
-
             base.OnConfiguring(optionsBuilder);
-
-            //IConfigurationRoot configuration = new ConfigurationBuilder().dire
-            //.SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            //.AddJsonFile("appsettings.json")
-            //.Build();
-            //optionsBuilder.UseSqlServer(configuration.GetConnectionString("MovieTicketDb"));
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

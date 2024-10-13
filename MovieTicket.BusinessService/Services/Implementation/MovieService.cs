@@ -1,4 +1,5 @@
-﻿using MovieTicket.BusinessService.Services.Interface;
+﻿using MovieTicket.BusinessService.LoggerFactory;
+using MovieTicket.BusinessService.Services.Interface;
 using MovieTicket.DBHelper.DatabaseContext.Repo;
 using MovieTicket.DBHelper.Entities;
 using MovieTicket.ModelHelper.DTO;
@@ -9,17 +10,22 @@ namespace MovieTicket.BusinessService.Services.Implementation
     public class MovieService : IMovieService
     {
         private readonly IMovieTicketRepository<MovieMaster> _repo;
+        private readonly ICustomLogger _logger;
 
-        public MovieService(IMovieTicketRepository<MovieMaster> repo)
+        public MovieService(IMovieTicketRepository<MovieMaster> repo, ICustomLogger logger)
         {
             _repo = repo;
+            _logger = logger;
         }
 
         public async Task<List<MovieDto>> GetAllMovieNameAsync()
         {
             try
             {
+                _logger.InfoLog($"For GetAllMovieNameAsync Service DB Call Initiated...");
                 var movies = await _repo.GetAllAsync();
+                _logger.InfoLog($"For GetAllMovieNameAsync Service DB Call Completion...");
+
                 List<MovieDto> result = new List<MovieDto>();
                 foreach (var item in movies)
                 {
@@ -35,6 +41,7 @@ namespace MovieTicket.BusinessService.Services.Implementation
             }
             catch (Exception ex)
             {
+                _logger.ErrorLog($"Exception while executing GetAllMovieNameAsync. Details - {ex.Message}");
                 return new List<MovieDto>();
             }
         }

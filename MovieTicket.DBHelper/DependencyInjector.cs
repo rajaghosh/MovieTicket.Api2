@@ -13,14 +13,7 @@ namespace MovieTicket.DBHelper
             services.AddDbContext<MovieTicketDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("MovieTicketDb")));
 
-            //services.AddDbContext<MovieTicketDbContext>(options =>
-            //    options.UseSqlServer("Data Source=RAJA-LENOVO\\SQLEXPRESS;Initial Catalog=MovieTicket_5; Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False"));
-
-            //services.AddDbContext<MovieTicketDbContext>(options =>
-            //    options.UseSqlServer(Configuration["ConnectionStrings:MovieTicketDb"]));
-
             services.AddScoped(typeof(IMovieTicketRepository<>), typeof(MovieTicketRepository<>));
-            //services.AddSingleton<IDbAppSettings, DbAppSettings>();
         }        
     }
 }

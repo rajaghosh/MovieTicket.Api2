@@ -1,0 +1,3 @@
+﻿{
+  "MovieTicketDb": "Data Source=RAJA-LENOVO\\SQLEXPRESS;Initial Catalog=MovieTicket_5; Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False"
+}

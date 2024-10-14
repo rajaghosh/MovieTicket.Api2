@@ -19,6 +19,7 @@ namespace MovieTicket.ModelHelper.DTO
     {
         [UserRole]
         public required string DoneBy { get; set; }
+        public required string DoneFor { get; set; }
         public int? UserId { get; set; }
         public int MovieId { get; set; }
         public int ScreenId { get; set; }

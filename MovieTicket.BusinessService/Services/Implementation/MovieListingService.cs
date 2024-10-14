@@ -58,6 +58,46 @@ namespace MovieTicket.BusinessService.Services.Implementation
             }
         }
 
+        public async Task<List<MovieListing>> GetAllCoreMovieListingAsync()
+        {
+            try
+            {
+                var movies = await _repo.GetAllAsync();
+
+                //var movieIds = movies.Select(p => p.MovieId).ToList();
+                //var screenIds = movies.Select(p => p.ScreenId).ToList();
+
+                //Task<List<MovieMaster>> movieDetailsTask = _movieService.GetSpecificMovieDetailsAsync(movieIds);
+                //Task<List<TheatreScreenTotalDto>> screenDetailsTask = _screenService.GetSpecificTheatreScreenDetailsAsync(screenIds);
+
+                //await Task.WhenAll(movieDetailsTask, screenDetailsTask);
+
+                //List<MovieMaster> movieDetails = movieDetailsTask.Result;
+                //List<TheatreScreenTotalDto> screenDetails = screenDetailsTask.Result;
+
+
+                //List<MovieListingDto> result = new List<MovieListingDto>();
+                //foreach (var item in movies)
+                //{
+                //    MovieListingDto movieListingObj = new MovieListingDto()
+                //    {
+                //        MovieName = movieDetails.Where(p => p.Id == item.MovieId).FirstOrDefault()?.Name ?? "",
+                //        TheatreName = screenDetails.Where(p => p.Id == item.MovieId).FirstOrDefault()?.TheatreName ?? "",
+                //        ScreenName = screenDetails.Where(p => p.Id == item.ScreenId).FirstOrDefault()?.ScreenName ?? "",
+                //        StartDate_StartTime = item.StartDate.ToString("MM-dd-yyyy") + " and " + item.StartTime.ToString("hh:mm:ss tt"),
+                //        EndDate_EndTime = item.EndDate.ToString("MM-dd-yyyy") + " and " + item.EndTime.ToString("hh:mm:ss tt"),
+                //        MovieRunningStatus = item.IsActive == true ? "Running" : "Closed"
+                //    };
+                //    result.Add(movieListingObj);
+                //}
+                return movies.ToList();
+            }
+            catch (Exception ex)
+            {
+                return new List<MovieListing>();
+            }
+        }
+
         public async Task<MovieListing> GetSpecificMovieListingDetailsAsync(ListingSearch listingDto)
         {
             try
@@ -75,10 +115,17 @@ namespace MovieTicket.BusinessService.Services.Implementation
                 await Task.Delay(0);
                 DateTime movieDate = listingDto.MovieStartDateTime;
 
-                if(movieListingObj.StartDate <= movieDate && movieDate <= movieListingObj.EndDate)
+                if (movieListingObj.StartDate.Date <= movieDate.Date && movieDate.Date <= movieListingObj.EndDate.Date)
                 {
-                    if (movieListingObj.StartDate.TimeOfDay <= movieDate.TimeOfDay
-                        && movieDate.TimeOfDay <= movieListingObj.EndDate.TimeOfDay)
+                    //if (movieListingObj.StartDate.TimeOfDay <= movieDate.TimeOfDay
+                    //    && movieDate.TimeOfDay <= movieListingObj.EndDate.TimeOfDay)
+                    //{
+                    //    return movieListingObj;
+                    //}
+
+                    //Time comparison
+                    if (movieListingObj.StartDate <= movieDate
+                        && movieDate <= movieListingObj.EndDate)
                     {
                         return movieListingObj;
                     }

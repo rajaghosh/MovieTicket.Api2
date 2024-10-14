@@ -12,6 +12,7 @@ namespace MovieTicket.DBHelper.Entities
         public int Id { get; set; }
         [UserRole]
         public required string DoneBy { get; set; }
+        public required string DoneFor { get; set; }
         [ForeignKey("UserMaster")]
         public int? UserId { get; set; }
         [ForeignKey("MovieMaster")]

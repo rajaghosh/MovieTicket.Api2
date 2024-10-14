@@ -18,16 +18,24 @@ namespace MovieTicket.Api.Controllers
     public class MovieController : Controller
     {
         private readonly IMovieService _movieService;
+        private readonly ITheatreService _theatreService;
+        private readonly IMovieListingService _movieListingService;
+        private readonly ITheatreScreenService _theatreScreenService;
         private readonly ICustomLogger _logger;
 
         public MovieController(IMovieService movieService,
-                                ICustomLogger logger)
+                                ICustomLogger logger,
+                                ITheatreService theatreService,
+                                IMovieListingService movieListingService,
+                                ITheatreScreenService theatreScreenService)
         {
             _movieService = movieService;
             _logger = logger;
+            _theatreService = theatreService;
+            _movieListingService = movieListingService;
+            _theatreScreenService = theatreScreenService;
         }
 
-        [AllowAnonymous]
         [HttpGet("DownloadPDF")]
         public IActionResult DownloadPDF()
         {
@@ -75,6 +83,7 @@ namespace MovieTicket.Api.Controllers
         }
 
 
+
         [HttpGet("GetAllMovie")]
         public async Task<ResponseDto<List<MovieDto>>> GetAll()
         {
@@ -100,7 +109,7 @@ namespace MovieTicket.Api.Controllers
                 else
                 {
                     _logger.InfoLog($"No data retrieved for GetAllMovie Api");
-                    resp.StatusCode = HttpStatusCode.InternalServerError;
+                    resp.StatusCode = HttpStatusCode.NotFound;
                     resp.Result = null;
                     resp.ErrorMessage = "No data retrieved during API execution!. Please check logs";
                 }
@@ -115,6 +124,81 @@ namespace MovieTicket.Api.Controllers
 
             return resp;
         }
+
+
+        [HttpPost("SearchMovieAtLocation")]
+        public async Task<ResponseDto<List<MovieSearchDto>>> SearchMovie([FromQuery][Required] string location)
+        {
+            ResponseDto<List<MovieSearchDto>> resp = new ResponseDto<List<MovieSearchDto>>()
+            {
+                StatusCode = HttpStatusCode.BadRequest,
+                Result = new List<MovieSearchDto>()
+            };
+
+            _logger.InfoLog($"Calling SearchMovieAtLocation API started by Id/Role: {HttpContext.UserDetails()}");
+
+            try
+            {
+                _logger.InfoLog($"Calling AddToMovieAsync service");
+                var theatres = await _theatreService.GetAllCoreTheatreNameAsync();
+                var theatresAtLocation = theatres.Where(p => p.Location.ToLower().Equals(location.ToLower())).ToList();
+
+                var theatreIdsAtLoc = theatresAtLocation.Select(p => p.Id).ToList();
+
+                var theatreScreens = await _theatreScreenService.GetAllCoreTheatreScreenAsync();
+                var screensAtLocation = theatreScreens.Where(p => theatreIdsAtLoc.Contains(p.TheatreId)).ToList();
+                var screenIdsAtLoc = screensAtLocation.Select(p => p.Id).ToList();
+
+                var movieListings = await _movieListingService.GetAllCoreMovieListingAsync();
+                var movieListingsAtLocation = movieListings.Where(p => screenIdsAtLoc.Contains(p.ScreenId)).ToList();
+                var movieIds = movieListingsAtLocation.Select(p => p.Id).ToList();
+
+                var movies = await _movieService.GetSpecificMovieDetailsAsync(movieIds);
+
+                List<MovieSearchDto> search = new List<MovieSearchDto>();
+
+                if (movies.Any())
+                {
+                    foreach (var movie in movies)
+                    {
+                        var screens1 = movieListingsAtLocation.Where(p => p.MovieId == movie.Id).Select(p => p.ScreenId).Distinct().ToList() ?? new List<int>();
+                        var theatres1 = theatreScreens.Where(p => screens1.Contains(p.TheatreId)).Select(p => p.TheatreId).Distinct().ToList() ?? new List<int>();
+
+                        MovieSearchDto searchObj = new MovieSearchDto()
+                        {
+                            Name = movie.Name,
+                            Language = movie.Language,
+                            RunTime = movie.RunningMin,
+                            Location = location.ToUpper(),
+                            TheatreIds = theatres1,
+                            ScreenIds = screens1
+                        };
+                        search.Add(searchObj);
+                    }
+
+                    _logger.InfoLog($"Info retrieved successfully for GetAllMovie Api");
+                    resp.StatusCode = HttpStatusCode.OK;
+                    resp.Result = search;
+                }
+                else
+                {
+                    _logger.InfoLog($"No data retrieved for GetAllMovie Api");
+                    resp.StatusCode = HttpStatusCode.NotFound;
+                    resp.Result = null;
+                    resp.ErrorMessage = "No data retrieved during API execution!. Please check logs";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.ErrorLog($"Exception occurred for AddNewMovie Api. Details {ex.Message}");
+                resp.StatusCode = HttpStatusCode.InternalServerError;
+                resp.Result = null;
+                resp.ErrorMessage = "Exception occured during API execution!. Please check logs";
+            }
+
+            return resp;
+        }
+
 
         [HttpPost("AddNewMovie")]
         public async Task<ResponseDto<string>> PostMovie([FromBody] AddMovieDto movieDto)
@@ -141,7 +225,7 @@ namespace MovieTicket.Api.Controllers
                 else
                 {
                     _logger.InfoLog($"No data added for AddNewMovie Api");
-                    resp.StatusCode = HttpStatusCode.InternalServerError;
+                    resp.StatusCode = HttpStatusCode.NotFound;
                     resp.Result = null;
                     resp.ErrorMessage = "Error occured during API execution!. Please check logs";
                 }
@@ -182,7 +266,7 @@ namespace MovieTicket.Api.Controllers
                 else
                 {
                     _logger.InfoLog($"No data updated for UpdateMovie Api");
-                    resp.StatusCode = HttpStatusCode.InternalServerError;
+                    resp.StatusCode = HttpStatusCode.NotFound;
                     resp.Result = null;
                     resp.ErrorMessage = "Error occured during API execution!. Please check logs";
                 }
@@ -223,7 +307,7 @@ namespace MovieTicket.Api.Controllers
                 else
                 {
                     _logger.InfoLog($"No data deleted for DeleteMovie Api");
-                    resp.StatusCode = HttpStatusCode.InternalServerError;
+                    resp.StatusCode = HttpStatusCode.NotFound;
                     resp.Result = null;
                     resp.ErrorMessage = "Error occured during API execution!. Please check logs";
                 }

@@ -7,6 +7,13 @@
         public int RunTime { get; set; }
     }
 
+    public class MovieSearchDto : MovieDto
+    {
+        public string Location { get; set; }
+        public List<int> TheatreIds { get; set; }
+        public List<int> ScreenIds { get; set; }
+    }
+
     public class AddMovieDto
     {
         public required string Name { get; set; }

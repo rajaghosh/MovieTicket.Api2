@@ -122,8 +122,8 @@ namespace MovieTicket.DBHelper.DatabaseContext
                     MovieId = 1,
                     ScreenId = 1,
                     //StartDate= new DateTime(2023,10,01),
-                    StartDate = DateTime.Parse("2023-10-21"), //Format yyyy-MM-dd
-                    EndDate = DateTime.Parse("2023-10-28"),
+                    StartDate = DateTime.Parse("2024-10-21"), //Format yyyy-MM-dd
+                    EndDate = DateTime.Parse("2024-10-28"),
                     StartTime = DateTime.Parse("09:00:00"),
                     EndTime = DateTime.Parse("11:00:00"),
                     IsActive = true
@@ -133,8 +133,8 @@ namespace MovieTicket.DBHelper.DatabaseContext
                     Id = 2,
                     MovieId = 2,
                     ScreenId = 1,
-                    StartDate = DateTime.Parse("2023-10-21"),
-                    EndDate = DateTime.Parse("2023-10-28"),
+                    StartDate = DateTime.Parse("2024-10-21"),
+                    EndDate = DateTime.Parse("2024-10-28"),
                     StartTime = DateTime.Parse("11:30:00"),
                     EndTime = DateTime.Parse("11:30:00"),
                     IsActive = true
@@ -142,8 +142,8 @@ namespace MovieTicket.DBHelper.DatabaseContext
             );
 
             modelBuilder.Entity<Booking>().HasData(
-               new Booking { Id = 1, DoneBy = "User", UserId = 1, MovieId = 1, ScreenId = 1, Row = 1, SeatNo = "A", ShowTime = DateTime.Parse("2023-10-22T09:00:00Z") },
-               new Booking { Id = 2, DoneBy = "User", UserId = 2, MovieId = 1, ScreenId = 1, Row = 1, SeatNo = "B", ShowTime = DateTime.Parse("2023-10-22T09:00:00Z") }
+               new Booking { Id = 1, DoneBy = "User", DoneFor = "cust1@deloitte.com", UserId = 1, MovieId = 1, ScreenId = 1, Row = 1, SeatNo = "A", ShowTime = DateTime.Parse("2024-10-22T09:00:00Z") },
+               new Booking { Id = 2, DoneBy = "User", DoneFor = "cust1@deloitte.com", UserId = 2, MovieId = 1, ScreenId = 1, Row = 1, SeatNo = "B", ShowTime = DateTime.Parse("2024-10-22T09:00:00Z") }
             );
         }
 

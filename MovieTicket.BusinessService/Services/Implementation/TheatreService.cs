@@ -37,6 +37,29 @@ namespace MovieTicket.BusinessService.Services.Implementation
             }
         }
 
+        public async Task<List<TheatreMaster>> GetAllCoreTheatreNameAsync()
+        {
+            try
+            {
+                var theatres = await _repo.GetAllAsync();
+                //List<TheatreDto> result = new List<TheatreDto>();
+                //foreach (var item in theatres)
+                //{
+                //    TheatreDto theatreObj = new TheatreDto()
+                //    {
+                //        Name = item.Name,
+                //        Location = item.Location
+                //    };
+                //    result.Add(theatreObj);
+                //}
+                return theatres.ToList();
+            }
+            catch (Exception ex)
+            {
+                return new List<TheatreMaster>();
+            }
+        }
+
         public async Task<List<TheatreMaster>> GetSpecificTheatreDetailsAsync(List<int> theatreIds)
         {
             try

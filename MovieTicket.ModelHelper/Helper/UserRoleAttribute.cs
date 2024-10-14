@@ -11,7 +11,7 @@ namespace MovieTicket.ModelHelper.Helper
                 return false;
 
             var role = value.ToString();
-            return role.Equals(Roles.Admin) || role.ToLower().Equals(Roles.User);
+            return role.Equals(Roles.Admin.ToString().ToLower()) || role.ToLower().Equals(Roles.User.ToString().ToLower());
         }
     }
 }

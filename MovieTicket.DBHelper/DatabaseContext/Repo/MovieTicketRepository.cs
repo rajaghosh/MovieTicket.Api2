@@ -32,6 +32,14 @@ namespace MovieTicket.DBHelper.DatabaseContext.Repo
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task<TEntity> AddReturnIdAsync(TEntity entity)
+        {
+            await _dbContext.Set<TEntity>().AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
+
+            return entity;
+        }
+
         public async Task UpdateAsync(TEntity entity)
         {
             _dbContext.Set<TEntity>().Update(entity);

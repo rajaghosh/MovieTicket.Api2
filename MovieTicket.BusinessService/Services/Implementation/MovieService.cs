@@ -58,6 +58,32 @@ namespace MovieTicket.BusinessService.Services.Implementation
                 return new List<MovieMaster>();
             }
         }
+        
+        public async Task<List<MovieDto>> GetSpecificMovieDetailsDtoAsync(List<int> movieIds)
+        {
+            try
+            {
+                var movies = await _repo.GetAllAsync();
+                var movieList = movies.Where(p => movieIds.Contains(p.Id)).ToList();
+
+                List<MovieDto> result = new List<MovieDto>();
+                foreach (var item in movieList)
+                {
+                    MovieDto movieObj = new MovieDto()
+                    {
+                        Name = item.Name,
+                        Language = item.Language,
+                        RunTime = item.RunningMin
+                    };
+                    result.Add(movieObj);
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new List<MovieDto>();
+            }
+        }
 
 
         public async Task<bool> AddToMovieAsync(AddMovieDto movieDto)

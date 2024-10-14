@@ -72,14 +72,16 @@ namespace MovieTicket.BusinessService.Services.Implementation
             }
         }
 
-        public async Task<bool> AddToBookingAsync(AddBookingDto bookingDto)
+        public async Task<int> AddToBookingAsync(AddBookingDto bookingDto)
         {
+            var bookingId = 0;
             try
             {
+               
                 string bookingHour = bookingDto.BookingDateTime.ToString("HH");//.ToString("D2");
                 string bookingMin = bookingDto.BookingDateTime.ToString("mm");//.ToString("D2");
 
-                var bookingTime = $"{bookingHour}:{bookingMin}:00";
+                var bookingTime = $"{bookingDto.BookingDateTime.ToString("yyyy-MM-dd")} {bookingHour}:{bookingMin}:00";
 
                 //Check if the seat is already book
                 ListingSearch listSearch = new ListingSearch()
@@ -100,8 +102,8 @@ namespace MovieTicket.BusinessService.Services.Implementation
                                                 p.SeatNo == bookingDto.SeatNo &&
                                                 p.MovieId == bookingDto.MovieId &&
                                                 p.ScreenId == bookingDto.ScreenId &&
-                                                movieScheduleObj.IsActive &&
-                                                p.ShowTime.ToString("HH:mm:ss").Equals(bookingTime))
+                                                movieScheduleObj.IsActive)
+                                                //&& p.ShowTime.ToString("HH:mm:ss").Equals(bookingTime))
                                         .FirstOrDefault()?.Id ?? 0;
 
                 if (checkBookingId != 0)
@@ -121,15 +123,19 @@ namespace MovieTicket.BusinessService.Services.Implementation
                         var bookingObj = new Booking()
                         {
                             DoneBy = bookingDto.DoneBy,
+                            DoneFor = bookingDto.DoneFor,
                             UserId = bookingDto.UserId,
                             MovieId = bookingDto.MovieId,
                             ScreenId = bookingDto.ScreenId,
                             Row = bookingDto.Row,
                             SeatNo = bookingDto.SeatNo,
-                            ShowTime = DateTime.ParseExact(bookingTime, "HH:mm:ss", null)
+                            ShowTime = DateTime.ParseExact(bookingTime, "yyyy-MM-dd HH:mm:ss", null)
+                            //ShowTime = DateTime.ParseExact(bookingDto.BookingDateTime, "yyyy-MM-dd HH:mm:ss", null)
                         };
 
-                        await _repo.AddAsync(bookingObj);
+                        //await _repo.AddAsync(bookingObj);
+                        var details = await _repo.AddReturnIdAsync(bookingObj);
+                        bookingId = details.Id;
                     }
                     else
                     {
@@ -145,9 +151,9 @@ namespace MovieTicket.BusinessService.Services.Implementation
             }
             catch (Exception ex)
             {
-                return false;
+                return bookingId;
             }
-            return true;
+            return bookingId;
         }
 
         public async Task<bool> UpdateBookingAsync(UpdateBookingDto bookingDto)
@@ -163,6 +169,7 @@ namespace MovieTicket.BusinessService.Services.Implementation
                 {
                     Id = bookingDto.Id,
                     DoneBy = bookingDto.DoneBy,
+                    DoneFor = bookingDto.DoneFor,
                     UserId = bookingDto.UserId,
                     MovieId = bookingDto.MovieId,
                     ScreenId = bookingDto.ScreenId,

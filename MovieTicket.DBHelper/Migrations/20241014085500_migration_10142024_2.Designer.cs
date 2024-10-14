@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieTicket.DBHelper.DatabaseContext;
 
@@ -11,9 +12,11 @@ using MovieTicket.DBHelper.DatabaseContext;
 namespace MovieTicket.DBHelper.Migrations
 {
     [DbContext(typeof(MovieTicketDbContext))]
-    partial class MovieTicketDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241014085500_migration_10142024_2")]
+    partial class migration_10142024_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,10 +34,6 @@ namespace MovieTicket.DBHelper.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("DoneBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DoneFor")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -72,7 +71,6 @@ namespace MovieTicket.DBHelper.Migrations
                         {
                             Id = 1,
                             DoneBy = "User",
-                            DoneFor = "cust1@deloitte.com",
                             MovieId = 1,
                             Row = 1,
                             ScreenId = 1,
@@ -84,7 +82,6 @@ namespace MovieTicket.DBHelper.Migrations
                         {
                             Id = 2,
                             DoneBy = "User",
-                            DoneFor = "cust1@deloitte.com",
                             MovieId = 1,
                             Row = 1,
                             ScreenId = 1,

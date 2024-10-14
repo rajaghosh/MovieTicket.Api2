@@ -46,6 +46,35 @@ namespace MovieTicket.BusinessService.Services.Implementation
             }
         }
 
+        public async Task<List<TheatreScreen>> GetAllCoreTheatreScreenAsync()
+        {
+            try
+            {
+                var theatreScreens = await _repo.GetAllAsync();
+                //List<TheatreScreenDto> result = new List<TheatreScreenDto>();
+
+                //var allTheatreIds = theatreScreens.Select(p => p.TheatreId).ToList();
+                //var allTheatreDetails = await _theatreService.GetSpecificTheatreDetailsAsync(allTheatreIds);
+
+                //foreach (var item in theatreScreens)
+                //{
+                //    TheatreScreenDto theatreScreenObj = new TheatreScreenDto()
+                //    {
+                //        TheatreName = allTheatreDetails.Where(p => p.Id == item.TheatreId).FirstOrDefault()?.Name ?? "",
+                //        ScreenName = item.ScreenName,
+                //        Rows = item.Rows,
+                //        SeatNos = item.SeatNos
+                //    };
+                //    result.Add(theatreScreenObj);
+                //}
+                return theatreScreens.ToList();
+            }
+            catch (Exception ex)
+            {
+                return new List<TheatreScreen>();
+            }
+        }
+
         public async Task<List<TheatreScreenTotalDto>> GetSpecificTheatreScreenDetailsAsync(List<int> theatreScreenIds)
         {
             try

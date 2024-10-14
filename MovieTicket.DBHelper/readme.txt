@@ -18,3 +18,16 @@
 	and then to sync we use the same command
 
 	COMMAND: dotnet ef database update --context MovieTicketDbContext
+
+---------------------------------------------------------
+SQL QUERY 
+
+USE <MovieTicket DB>
+GO
+
+SELECT * FROM [dbo].[Booking]
+SELECT * FROM [dbo].[MovieListing]
+SELECT * FROM [dbo].[MovieMaster]
+SELECT * FROM [dbo].[TheatreMaster]
+SELECT * FROM [dbo].[TheatreScreen]
+SELECT * FROM [dbo].[UserMaster]

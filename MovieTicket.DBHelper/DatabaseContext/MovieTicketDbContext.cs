@@ -49,19 +49,103 @@ namespace MovieTicket.DBHelper.DatabaseContext
             );
 
             modelBuilder.Entity<TheatreMaster>().HasData(
-                new TheatreMaster { Id = 1, Name = "Inox-Kolkata", Description = "Multiplex", Location = "Kolkata" },
-                new TheatreMaster { Id = 2, Name = "PVR-Kolkata", Description = "Multiplex", Location = "Kolkata" },
+                new TheatreMaster { Id = 1, Name = "Inox-Kol", Description = "Multiplex", Location = "Kolkata" },
+                new TheatreMaster { Id = 2, Name = "PVR-Kol", Description = "Multiplex", Location = "Kolkata" },
                 new TheatreMaster { Id = 3, Name = "Inox-NCR", Description = "Multiplex", Location = "NCR" },
-                new TheatreMaster { Id = 4, Name = "PVR-NCR", Description = "Multiplex", Location = "NCR" }
+                new TheatreMaster { Id = 4, Name = "PVR-NCR", Description = "Multiplex", Location = "NCR" },
+                new TheatreMaster { Id = 5, Name = "Inox-HYD", Description = "Multiplex", Location = "Hyderabad" }
             );
 
             modelBuilder.Entity<UserMaster>().HasData(
-                new UserMaster { Id = 1, Name = "a1", Email = "a1@deloitte.com", Password = "abc1@123", Location = "Kolkata", Role = "Admin" },
-                new UserMaster { Id = 2, Name = "a2", Email = "a2@deloitte.com", Password = "abc2@123", Location = "Hyderabad", Role = "Admin" },
-                new UserMaster { Id = 3, Name = "a3", Email = "a3@deloitte.com", Password = "abc3@123", Location = "Pune", Role = "User" },
-                new UserMaster { Id = 4, Name = "a4", Email = "a4@deloitte.com", Password = "abc4@123", Location = "NCR", Role = "User" },
-                new UserMaster { Id = 5, Name = "a5", Email = "a5@deloitte.com", Password = "abc5@123", Location = "Hyderabad", Role = "User" }
+                new UserMaster { Id = 1, Name = "inox-kol", Email = "inox-kol@deloitte.com", Password = "abc1@123", Location = "Kolkata", Role = "Admin" },
+                new UserMaster { Id = 2, Name = "inox-kol", Email = "inox-kol@deloitte.com", Password = "abc2@123", Location = "Hyderabad", Role = "Admin" },
+                new UserMaster { Id = 3, Name = "cust1", Email = "cust1@deloitte.com", Password = "abc3@123", Location = "Pune", Role = "User" },
+                new UserMaster { Id = 4, Name = "cust2", Email = "cust2@deloitte.com", Password = "abc4@123", Location = "NCR", Role = "User" },
+                new UserMaster { Id = 5, Name = "inox-hyd", Email = "inox-hyd@deloitte.com", Password = "abc5@123", Location = "Hyderabad", Role = "Admin" }
+            );
+
+            modelBuilder.Entity<TheatreScreen>().HasData(
+                new TheatreScreen
+                {
+                    Id = 1,
+                    TheatreId = 1,
+                    ScreenName = "Inox-Kol-Scr1",
+                    Rows = new List<int>() { 1, 2, 3, 4, 5 },
+                    SeatNos = new List<string>() { "A", "B", "C", "D", "E" }
+                },
+                new TheatreScreen
+                {
+                    Id = 2,
+                    TheatreId = 1,
+                    ScreenName = "Inox-Kol-Scr2",
+                    Rows = new List<int>() { 1, 2, 3, 4, 5 },
+                    SeatNos = new List<string>() { "A", "B", "C", "D", "E" }
+                },
+                new TheatreScreen
+                {
+                    Id = 3,
+                    TheatreId = 2,
+                    ScreenName = "PVR-Kol-Scr1",
+                    Rows = new List<int>() { 1, 2, 3, 4, 5 },
+                    SeatNos = new List<string>() { "A", "B", "C", "D", "E" }
+                },
+                new TheatreScreen
+                {
+                    Id = 4,
+                    TheatreId = 2,
+                    ScreenName = "PVR-Kol-Scr2",
+                    Rows = new List<int>() { 1, 2, 3, 4, 5 },
+                    SeatNos = new List<string>() { "A", "B", "C", "D", "E" }
+                },
+                new TheatreScreen
+                {
+                    Id = 5,
+                    TheatreId = 5,
+                    ScreenName = "Inox-HYD-Scr1",
+                    Rows = new List<int>() { 1, 2, 3, 4, 5 },
+                    SeatNos = new List<string>() { "A", "B", "C", "D", "E" }
+                },
+                new TheatreScreen
+                {
+                    Id = 6,
+                    TheatreId = 5,
+                    ScreenName = "Inox-HYD-Scr2",
+                    Rows = new List<int>() { 1, 2, 3, 4, 5 },
+                    SeatNos = new List<string>() { "A", "B", "C", "D", "E" }
+                }
+            );
+
+            modelBuilder.Entity<MovieListing>().HasData(
+                new MovieListing
+                {
+                    Id = 1,
+                    MovieId = 1,
+                    ScreenId = 1,
+                    //StartDate= new DateTime(2023,10,01),
+                    StartDate = DateTime.Parse("2023-10-21"), //Format yyyy-MM-dd
+                    EndDate = DateTime.Parse("2023-10-28"),
+                    StartTime = DateTime.Parse("09:00:00"),
+                    EndTime = DateTime.Parse("11:00:00"),
+                    IsActive = true
+                },
+                new MovieListing
+                {
+                    Id = 2,
+                    MovieId = 2,
+                    ScreenId = 1,
+                    StartDate = DateTime.Parse("2023-10-21"),
+                    EndDate = DateTime.Parse("2023-10-28"),
+                    StartTime = DateTime.Parse("11:30:00"),
+                    EndTime = DateTime.Parse("11:30:00"),
+                    IsActive = true
+                }
+            );
+
+            modelBuilder.Entity<Booking>().HasData(
+               new Booking { Id = 1, DoneBy = "User", UserId = 1, MovieId = 1, ScreenId = 1, Row = 1, SeatNo = "A", ShowTime = DateTime.Parse("2023-10-22T09:00:00Z") },
+               new Booking { Id = 2, DoneBy = "User", UserId = 2, MovieId = 1, ScreenId = 1, Row = 1, SeatNo = "B", ShowTime = DateTime.Parse("2023-10-22T09:00:00Z") }
             );
         }
+
     }
 }
